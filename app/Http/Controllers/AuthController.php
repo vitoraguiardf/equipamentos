@@ -29,7 +29,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, "Autenticação bem Sucedida!", 200);
     }
 
     /**
@@ -39,7 +39,10 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json([
+            'message' => "Exibindo Informações do Usuário Autenticado",
+            'data' => auth('api')->user()
+        ], 200);
     }
 
     /**
@@ -49,9 +52,11 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+        auth('api')->logout();
+        return response()->json([
+            'message' => 'Saída bem Sucedida!',
+            'data' => null
+        ], 200);
     }
 
     /**
@@ -61,22 +66,27 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth('api')->refresh(), "Renovação de Token bem Sucedida!", 200);
     }
 
     /**
      * Get the token array structure.
      *
      * @param  string $token
+     * @param  string $message
+     * @param  int $code
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $message, $code)
     {
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+            "message" => $message,
+            "data" => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ]
+        ], $code);
     }
 }

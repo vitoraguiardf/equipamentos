@@ -62,5 +62,14 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return [];
     }
+    
+    /**
+     * Retorna verdadeiro se o usuário pessui CPF cadastrado
+     *
+     * @return bool
+     */
+    function hasPerson() :bool {
+        return false;
+    }
 
 }
