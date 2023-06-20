@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <profile-component/>
+    <v-profile/>
 
 @endsection
